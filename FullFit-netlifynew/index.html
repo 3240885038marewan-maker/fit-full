@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fit&amp;Full | Nutrizione e Allenamento su Misura</title>
+    <meta name="description" content="Piano alimentare e scheda di allenamento personalizzati in 2 minuti: calorie e macro calcolate su di te, esercizi in base a dove ti alleni e agli attrezzi che hai. Gratuito.">
+    <meta name="theme-color" content="#031445">
+    <link rel="stylesheet" href="CSSFullfit.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <header class="navbar">
+        <a class="logo" href="#top">Fit<span>&amp;</span>Full</a>
+        <nav class="nav-links" aria-label="Sezioni">
+            <a href="#filosofia">Filosofia</a>
+            <a href="#calcolatore">Calcola il piano</a>
+            <a href="#recensioni">Recensioni</a>
+        </nav>
+        <div class="nav-right">
+            <button id="btn-nav-login" class="btn-secondary-sm" type="button">Accedi</button>
+            <a href="#calcolatore" class="btn-primary btn-sm">Configura il piano</a>
+        </div>
+    </header>
+
+    <div id="service-banner" class="notice warn banner hidden" role="status">
+        Il servizio di accesso non risponde in questo momento. Puoi comunque configurare il piano: i dati restano su questo dispositivo.
+    </div>
+
+    <main id="top">
+        <section class="hero">
+            <div class="hero-container">
+                <span class="tag-label">Nutrizione &amp; Performance</span>
+                <h1>La scienza del benessere,<br><em>disegnata intorno a te.</em></h1>
+                <p>Basta diete estreme e programmi generici. Uniamo algoritmi nutrizionali e programmazione dell’allenamento in un’unica esperienza su misura.</p>
+                <div class="hero-actions">
+                    <a href="#calcolatore" class="btn-primary">Configura il tuo piano &rarr;</a>
+                    <span class="hero-subtext">Gratuito durante il lancio · Nessuna carta di credito · Pronto in 2 minuti</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="filosofia" class="values-section">
+            <div class="container-narrow text-center">
+                <span class="tag-label">La nostra filosofia</span>
+                <h2>Nessun compromesso. Solo equilibrio reale.</h2>
+                <p class="section-desc">Crediamo in un approccio scientifico e sostenibile nel tempo. Il tuo corpo non ha bisogno di privazioni, ma di una strategia personalizzata.</p>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-num">01</div>
+                    <h3>Personalizzazione reale</h3>
+                    <p>Ogni calcolo calorico e suddivisione dei macronutrienti tiene conto della tua composizione e dei tuoi ritmi reali.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-num">02</div>
+                    <h3>Sostenibilità alimentare</h3>
+                    <p>Adattiamo i pasti alle tue preferenze alimentari e intolleranze, senza costringerti a rinunce insostenibili.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-num">03</div>
+                    <h3>Progressione costante</h3>
+                    <p>Un programma d’allenamento studiato per farti progredire passo dopo passo, in palestra o a casa con gli attrezzi che hai.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="calcolatore" class="form-section">
+            <div class="form-container-card">
+                <div class="form-header text-center">
+                    <span class="tag-label">Step 1 di 2</span>
+                    <h2>Inizia la tua profilazione</h2>
+                    <p>Inserisci i tuoi parametri biometrici fondamentali.</p>
+                </div>
+
+                <form id="calculator-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="gender">Sesso biologico</label>
+                            <select id="gender" required>
+                                <option value="M">Uomo</option>
+                                <option value="F">Donna</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="age">Età (anni)</label>
+                            <input type="number" id="age" min="15" max="90" placeholder="es. 28" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight">Peso attuale (kg)</label>
+                            <input type="number" id="weight" step="0.1" min="30" max="250" placeholder="es. 72" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="height">Altezza (cm)</label>
+                            <input type="number" id="height" min="100" max="230" placeholder="es. 175" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="activity">Livello di attività quotidiana</label>
+                            <select id="activity" required>
+                                <option value="1.2">Sedentario (poco o nessun esercizio)</option>
+                                <option value="1.375">Leggero (1-3 allenamenti a settimana)</option>
+                                <option value="1.55" selected>Moderato (3-5 allenamenti a settimana)</option>
+                                <option value="1.725">Intenso (6-7 allenamenti a settimana)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="goal">Obiettivo principale</label>
+                            <select id="goal" required>
+                                <option value="cut">Definizione / perdita di peso (-15%)</option>
+                                <option value="maintain" selected>Mantenimento e ricomposizione</option>
+                                <option value="bulk">Ipertrofia e massa muscolare (+10%)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary full-btn">Prosegui alla personalizzazione &rarr;</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="recensioni" class="reviews-section">
+            <div class="container-narrow text-center">
+                <span class="tag-label">Recensioni</span>
+                <h2>Cosa dicono gli utenti</h2>
+                <p class="section-desc">Solo opinioni reali di chi ha usato Fit&amp;Full.</p>
+            </div>
+            <div id="reviews-summary" class="reviews-summary"></div>
+            <div id="reviews-list" aria-live="polite"></div>
+            <div class="reviews-cta">
+                <button id="btn-write-review" type="button" class="btn-secondary-sm">Scrivi una recensione</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- STEP 2: preferenze -->
+    <div id="profiling-modal" class="modal-overlay hidden">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="profiling-title" tabindex="-1">
+            <button class="modal-close" type="button" aria-label="Chiudi">&times;</button>
+
+            <div class="modal-header text-center">
+                <span class="tag-label">Step 2 di 2</span>
+                <h2 id="profiling-title">Preferenze e abitudini</h2>
+                <p>Configuriamo il piano ideale sulle tue routine quotidiane.</p>
+            </div>
+
+            <form id="profiling-form">
+                <div class="form-group margin-b">
+                    <label>Dove intendi allenarti?</label>
+                    <div class="radio-tile-group">
+                        <label class="radio-tile">
+                            <input type="radio" name="location" value="gym" checked>
+                            <span>In palestra</span>
+                        </label>
+                        <label class="radio-tile">
+                            <input type="radio" name="location" value="home">
+                            <span>A casa</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group margin-b hidden" id="equipment-group">
+                    <label>Quali attrezzi hai a casa?</label>
+                    <div class="check-tile-group">
+                        <label class="check-tile"><input type="checkbox" name="equipment" value="dumbbells"><span>Manubri (anche componibili)</span></label>
+                        <label class="check-tile"><input type="checkbox" name="equipment" value="bands"><span>Bande elastiche</span></label>
+                        <label class="check-tile"><input type="checkbox" name="equipment" value="kettlebell"><span>Kettlebell</span></label>
+                        <label class="check-tile"><input type="checkbox" name="equipment" value="pullupbar"><span>Sbarra per trazioni</span></label>
+                        <label class="check-tile"><input type="checkbox" name="equipment" value="bench"><span>Panca</span></label>
+                    </div>
+                    <p class="field-hint">Seleziona tutto ciò che hai. Se non hai attrezzi, lascia vuoto: programmiamo a corpo libero. Con sbarra e bande il programma include più esercizi, come le trazioni.</p>
+                </div>
+
+                <div class="form-group margin-b">
+                    <label for="workout-days">Giorni di allenamento a settimana</label>
+                    <select id="workout-days" required>
+                        <option value="1">1 giorno / settimana</option>
+                        <option value="2">2 giorni / settimana</option>
+                        <option value="3" selected>3 giorni / settimana</option>
+                        <option value="4">4 giorni / settimana</option>
+                        <option value="5">5 giorni / settimana</option>
+                    </select>
+                </div>
+
+                <div class="form-group margin-b">
+                    <label for="diet-style">Stile alimentare preferito</label>
+                    <select id="diet-style" required>
+                        <option value="mediterranean" selected>Bilanciato / Mediterraneo</option>
+                        <option value="flexible">Flessitariano</option>
+                        <option value="protein_fit">High protein focus</option>
+                        <option value="low_carb">Chetogenico / Low carb</option>
+                        <option value="vegetarian">Vegetariano</option>
+                        <option value="vegan">Vegano</option>
+                    </select>
+                </div>
+
+                <div class="form-group margin-b">
+                    <label for="intolerances-select">Allergie o intolleranze</label>
+                    <select id="intolerances-select">
+                        <option value="none" selected>Nessuna intolleranza</option>
+                        <option value="lactose">Lattosio</option>
+                        <option value="gluten">Glutine / celiachia</option>
+                        <option value="nuts">Frutta a guscio</option>
+                        <option value="nickel">Nichel</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary full-btn">Genera la mia dashboard &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- STEP 3: account (facoltativo) -->
+    <div id="auth-modal" class="modal-overlay hidden">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="auth-title" tabindex="-1">
+            <button class="modal-close" type="button" aria-label="Chiudi">&times;</button>
+
+            <div class="modal-header text-center">
+                <span class="tag-label">Account gratuito</span>
+                <h2 id="auth-title">Salva il tuo piano online</h2>
+                <p id="auth-subtitle">Crea un account gratuito per ritrovare piano e progressi da qualsiasi dispositivo.</p>
+            </div>
+
+            <form id="auth-form">
+                <div class="form-group margin-b">
+                    <label for="auth-email">Email</label>
+                    <input type="email" id="auth-email" autocomplete="email" placeholder="la-tua-email@esempio.com" required>
+                </div>
+
+                <div class="form-group margin-b">
+                    <label for="auth-password">Password</label>
+                    <input type="password" id="auth-password" autocomplete="current-password" minlength="6" placeholder="Minimo 6 caratteri" required>
+                </div>
+
+                <div id="auth-message" class="auth-message hidden" role="alert"></div>
+                <button type="button" id="auth-continue" class="btn-secondary-sm full-btn hidden">Continua senza account</button>
+
+                <button type="submit" id="btn-auth-submit" class="btn-primary full-btn">Crea account e salva il piano</button>
+
+                <p class="auth-links">
+                    <a href="#" id="toggle-auth-mode">Hai già un account? Accedi</a>
+                    <a href="#" id="btn-skip-auth">Continua senza account</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="logo">Fit<span>&amp;</span>Full</div>
+            <p>&copy; 2026 Fit&amp;Full. Nutrizione e performance personalizzata.</p>
+        </div>
+        <p class="footer-note">Fit&amp;Full offre indicazioni generali a scopo informativo e non sostituisce il parere di un medico, di un dietista o di un professionista dell’allenamento. In presenza di patologie, allergie gravi, gravidanza o infortuni consulta uno specialista prima di modificare dieta o attività fisica.</p>
+    </footer>
+
+    <script src="js/supabase-client.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/reviews.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

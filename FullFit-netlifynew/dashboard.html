@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fit&amp;Full — Area riservata</title>
+    <meta name="theme-color" content="#031445">
+    <meta name="robots" content="noindex">
+    <link rel="stylesheet" href="CSSFullfit.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="dashboard-body">
+
+    <header class="navbar">
+        <a class="logo" href="index.html">Fit<span>&amp;</span>Full</a>
+        <div class="nav-right">
+            <a href="index.html" class="btn-secondary-sm">Home</a>
+            <div class="user-profile-badge">
+                <span class="avatar-initial" id="header-avatar">A</span>
+                <span id="user-name">Ospite</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+
+        <aside class="dash-sidebar">
+            <div>
+                <div class="user-card-mini">
+                    <div class="avatar-ring" id="sidebar-avatar-ring">A</div>
+                    <div class="user-info">
+                        <h4 id="user-name-display">Ospite</h4>
+                        <span class="user-plan">Accesso gratuito</span>
+                    </div>
+                </div>
+
+                <nav class="dash-nav" aria-label="Sezioni della dashboard">
+                    <a href="#panoramica" class="dash-link active">Panoramica</a>
+                    <a href="#allenamento" class="dash-link">Scheda allenamento</a>
+                    <a href="#alimentazione" class="dash-link">Piano alimentare</a>
+                    <a href="#recensione" class="dash-link">La tua recensione</a>
+                </nav>
+            </div>
+
+            <div class="sidebar-footer">
+                <button id="btn-logout-action" class="btn-logout" type="button">Disconnetti</button>
+            </div>
+        </aside>
+
+        <main class="dash-content">
+
+            <div class="dash-welcome-card">
+                <div>
+                    <h2>Il tuo programma — <span id="welcome-user-name">Atleta</span></h2>
+                    <p>Piano nutrizionale e scheda di allenamento calcolati sul tuo profilo.</p>
+                </div>
+                <button class="btn-primary" id="btn-add-weight" type="button">+ Registra il peso</button>
+            </div>
+
+            <div id="guest-note" class="notice hidden">
+                Stai usando Fit&amp;Full senza account: piano e progressi restano su questo dispositivo.
+                <a href="index.html?login=1">Accedi o registrati</a> per salvarli online.
+            </div>
+
+            <div id="no-profile" class="notice warn hidden">
+                Non abbiamo ancora un profilo per generare il tuo piano.
+                <a href="index.html#calcolatore">Configura il piano in 2 minuti</a>.
+            </div>
+
+            <div class="stats-grid" data-needs-profile>
+                <div class="stat-card">
+                    <div class="stat-details">
+                        <span class="stat-title">Target calorico giornaliero</span>
+                        <div class="stat-value" id="dash-kcal">---</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-details">
+                        <span class="stat-title">Obiettivo</span>
+                        <div class="stat-value" id="dash-goal">---</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-details">
+                        <span class="stat-title">Allenamento</span>
+                        <div class="stat-value" id="dash-days">---</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-details">
+                        <span class="stat-title">Macro giornalieri</span>
+                        <div class="stat-value" id="dash-macros">---</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dash-two-columns margin-top">
+
+                <div class="dash-card" id="panoramica">
+                    <div class="card-header-flex">
+                        <h3>Monitoraggio peso corporeo</h3>
+                        <span class="badge-soft">Storico misurazioni</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="weightChart" aria-label="Grafico del peso corporeo" role="img"></canvas>
+                    </div>
+                    <p class="workout-meta" id="weight-summary"></p>
+                </div>
+
+                <div class="dash-card" id="allenamento" data-needs-profile>
+                    <div class="card-header-flex">
+                        <h3>Sessione programmata</h3>
+                        <span class="status-dot-active" id="session-badge">0/0</span>
+                    </div>
+                    <div class="pill-tabs" id="session-tabs" role="tablist" aria-label="Sessioni della settimana"></div>
+                    <p class="workout-subtitle" id="session-focus"></p>
+                    <div class="workout-mini-list" id="workout-list"></div>
+                    <p class="workout-meta" id="session-note"></p>
+                </div>
+
+            </div>
+
+            <div class="dash-card margin-top" id="alimentazione" data-needs-profile>
+                <div class="card-header-flex">
+                    <h3>Piano nutrizionale</h3>
+                    <span class="badge-soft">5 pasti al giorno</span>
+                </div>
+                <div class="pill-tabs" id="diet-tabs" role="tablist" aria-label="Giorni della settimana"></div>
+                <div class="macro-bar" id="macro-bar"></div>
+                <div class="meal-cards-grid" id="meal-grid"></div>
+                <ul class="plan-notes" id="plan-notes"></ul>
+            </div>
+
+            <div class="dash-card margin-top" id="recensione">
+                <div class="card-header-flex">
+                    <h3>La tua recensione</h3>
+                    <span class="badge-soft">Pubblica</span>
+                </div>
+
+                <div id="review-login-needed" class="notice hidden">
+                    Per scrivere una recensione serve un account gratuito.
+                    <a href="index.html?login=1">Accedi o registrati</a>.
+                </div>
+
+                <div id="review-mine" class="review-mine hidden"></div>
+
+                <form id="review-form" class="hidden">
+                    <div class="form-group margin-b">
+                        <label id="review-rating-label">Il tuo voto</label>
+                        <div class="star-input" role="group" aria-labelledby="review-rating-label">
+                            <button type="button" class="star-btn" data-v="1" aria-label="1 stella" aria-pressed="false">★</button>
+                            <button type="button" class="star-btn" data-v="2" aria-label="2 stelle" aria-pressed="false">★</button>
+                            <button type="button" class="star-btn" data-v="3" aria-label="3 stelle" aria-pressed="false">★</button>
+                            <button type="button" class="star-btn" data-v="4" aria-label="4 stelle" aria-pressed="false">★</button>
+                            <button type="button" class="star-btn" data-v="5" aria-label="5 stelle" aria-pressed="false">★</button>
+                        </div>
+                    </div>
+                    <div class="form-group margin-b">
+                        <label for="review-name">Nome pubblicato</label>
+                        <input type="text" id="review-name" maxlength="40" placeholder="Es. Marco">
+                        <p class="field-hint">Questo nome sarà visibile a tutti insieme alla recensione. Non usare l’email.</p>
+                    </div>
+                    <div class="form-group margin-b">
+                        <label for="review-body">La tua esperienza</label>
+                        <textarea id="review-body" rows="4" placeholder="Cosa ti è piaciuto? Cosa miglioreresti?"></textarea>
+                        <p class="field-hint" id="review-count">0 / 600</p>
+                    </div>
+                    <button type="submit" class="btn-primary">Pubblica la recensione</button>
+                </form>
+
+                <div id="review-status" class="auth-message hidden" role="status"></div>
+            </div>
+
+            <p class="disclaimer">Le indicazioni di Fit&amp;Full sono generali e informative: non sostituiscono il parere di un medico, di un dietista o di un professionista dell’allenamento. In presenza di patologie, allergie gravi, gravidanza o infortuni consulta uno specialista prima di modificare dieta o attività fisica.</p>
+
+        </main>
+    </div>
+
+    <div id="weight-modal" class="modal-overlay hidden">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="weight-title" tabindex="-1">
+            <button class="modal-close" id="close-weight-modal" type="button" aria-label="Chiudi">&times;</button>
+            <div class="modal-header text-center">
+                <span class="tag-label">Check-in biometrico</span>
+                <h2 id="weight-title">Aggiorna il peso corporeo</h2>
+                <p>Inserisci il valore rilevato per aggiornare il grafico dei progressi.</p>
+            </div>
+            <form id="weight-form">
+                <div class="form-group margin-b">
+                    <label for="input-new-weight">Peso rilevato (kg)</label>
+                    <input type="number" step="0.1" min="30" max="300" id="input-new-weight" placeholder="Es. 74.5" required>
+                </div>
+                <div id="weight-error" class="auth-message error hidden" role="alert"></div>
+                <button type="submit" class="btn-primary full-btn">Salva misurazione</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/supabase-client.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/planner.js"></script>
+    <script src="js/reviews.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
